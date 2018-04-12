@@ -64,7 +64,7 @@ class Blockchain:
             if current_block.hash[0:self.proof_of_work_difficulty] != "0"*self.proof_of_work_difficulty:
 
                 # The genesis block doesn't obey by they same rules, so just ignore it for this check
-                if current_block.previous_hash != "0":
+                if current_block.previous_hash != b"0":
                     print("Unmined block")
                     return False
             
@@ -84,7 +84,8 @@ class Blockchain:
         data = input("What data would you like to store on this block? ")
         new_block = Block(self.head.hash, data)
 
-        # The Proof of Work here is a simple version of hashcat;
+        # Here we implement mining a new block. The mining scheme we're using is Proof of Work.
+        # The implementation here is a simple version of hashcat, which is used by Bitcoin and Ethereum:
         # we calculate random hashes until one of them has the correct amount of leading 0's.
         # The correct amount is dictated by the proof_of_work_difficulty variable. If you want to increase/decrease
         # mining times, change that variable
