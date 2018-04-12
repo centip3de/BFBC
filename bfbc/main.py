@@ -11,7 +11,7 @@ def print_help():
 
 def main():
     print("Creating the blockchain...")
-    data = input("Creating the genesis block. What would you like it's data to be?: ")
+    data = input("Creating the genesis block. What would you like its data to be?: ")
     genesis_block = Block("0", data)
     chain = Blockchain(genesis_block)
 
@@ -35,7 +35,7 @@ def main():
         else:
             print("Hmmmm, not sure what you meant. Type `help` to get a list of comamands.")
 
-        action = input("What would you like to do? ")
+        action = input("What would you like to do? ").lower()
     
 
 if __name__ == "__main__":
