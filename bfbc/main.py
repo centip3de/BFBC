@@ -34,6 +34,17 @@ class Blockchain:
         self.head.next_block = block
         self.head = block
 
+    def print_chain(self):
+        current_block = self.genesis_block
+        while(current_block is not None):
+            print("{")
+            print("\tPrevious block hash:", current_block.previous_hash)
+            print("\tCurrent block hash:", current_block.hash)
+            print("\tCurrent block data:", current_block.data)
+            print("\tCurrent block timestamp:", current_block.data)
+            print("}")
+            current_block = current_block.next_block
+
     def check_integrity(self):
         previous_block = None
         current_block = self.genesis_block
@@ -71,7 +82,7 @@ class Blockchain:
         answer = input("Would you like to mine another block? [Y/N]: ")
         if answer.lower() == "y":
             self.mine_block()
-        
+
 
 def main():
     genesis_block = Block("0", "I'm the first block")
@@ -81,6 +92,7 @@ def main():
     print("Integrity:", chain.check_integrity())
 
     chain.mine_block()
+    chain.print_chain()
     
 
 if __name__ == "__main__":
