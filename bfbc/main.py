@@ -1,3 +1,5 @@
+import string
+import random
 from datetime import datetime
 from hashlib import sha256
 
@@ -21,37 +23,64 @@ class Blockchain:
     def __init__(self, genesis_block):
         self.genesis_block = genesis_block
         self.head = genesis_block
+        self.proof_of_work_difficulty = 4
 
-    def add_block(self, data):
+    def add_block_from_data(self, data):
         new_block = Block(self.head.hash, data)
         self.head.next_block = new_block
         self.head = new_block
+
+    def add_block(self, block):
+        self.head.next_block = block
+        self.head = block
 
     def check_integrity(self):
         previous_block = None
         current_block = self.genesis_block
         while(current_block.next_block is not None):
             if current_block.hash != current_block.calculate_hash():
+                print("Improper hash")
+                return False
+
+            if current_block.hash[0:self.proof_of_work_difficulty] != "0"*self.proof_of_work_difficulty:
+                print("Unmined block")
                 return False
             
             if previous_block:
                 if previous_block.hash != current_block.previous_hash.decode("utf-8"):
+                    print("Improper hash")
                     return False
 
             previous_block = current_block
             current_block = current_block.next_block
 
+        print("Valid blockchain")
         return True
+
+    def mine_block(self):
+        data = input("What data would you like to store on this block? ")
+        new_block = Block(self.head.hash, data)
+        target = "0"*self.proof_of_work_difficulty
+        while(new_block.hash[0:self.proof_of_work_difficulty] != target):
+            new_block = Block(self.head.hash, data)
+
+        print("New block mined!")
+        print("New block has hash:", new_block.hash)
+        self.add_block(new_block)
+
+        answer = input("Would you like to mine another block? [Y/N]: ")
+        if answer.lower() == "y":
+            self.mine_block()
+        
 
 def main():
     genesis_block = Block("0", "I'm the first block")
     chain = Blockchain(genesis_block)
-    chain.add_block("I'm the second block!")
-    chain.add_block("I'm the third block!")
-    chain.add_block("I'm the fourth block!")
 
     print("Genesis block hash: ", genesis_block.hash)
     print("Integrity:", chain.check_integrity())
+
+    chain.mine_block()
     
 
 if __name__ == "__main__":
